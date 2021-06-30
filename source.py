@@ -21,6 +21,21 @@ for item in filenames:
     except ftplib.error_perm:
         pass
  
+
+con.cwd('/FbaSha') 
+
+filenames = con.nlst()
+
+
+for item in filenames:
+    host_file = os.path.join(savePathChecksum, item)
+    
+    try:
+        with open(host_file, 'wb') as local_file:
+            con.retrbinary('RETR ' + item, local_file.write)
+    except ftplib.error_perm:
+        pass
+
 con.quit()
 
 
