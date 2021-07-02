@@ -8,40 +8,56 @@ password = '1234Bb!'
 savePathPrimary = '/Users/macuser/desktop/FTP-FileMonitoring/primaryfiles'
 savePathChecksum = '/Users/macuser/desktop/FTP-FileMonitoring/checksumFiles'
 
+def FTPdownload(savePath, con):
+	filenames = con.nlst()
+
+	for item in filenames:
+		host_file = os.path.join(savePath, item)
+		try:
+			with open(host_file, 'wb') as local_file:
+				con.retrbinary('RETR ' + item, local_file.write)
+		except ftplib.error_perm:
+			pass
+
+def getDirectorySize(dir):
+	size = 0
+	for path, dirs, files in os.walk(dir):
+		for f in files:
+			fp = os.path.join(path, f)
+			size += os.path.getsize(fp)
+	return size
+
+def getSortedFileList(dir):
+	file_list = os.listdir(dir)
+	full_list = [os.path.join(dir, i) for i in file_list]
+	sorted_list = sorted(full_list, key = os.path.basename)
+	return sorted_list
+
 while True:
+	
 	looptime = time.time()
 	con = ftplib.FTP(host, user, password)
+
 	con.cwd('/Fba')  
-
-	filenames = con.nlst()
-
-
-	for item in filenames:
-		host_file = os.path.join(savePathPrimary, item)
-		try:
-			with open(host_file, 'wb') as local_file:
-				con.retrbinary('RETR ' + item, local_file.write)
-		except ftplib.error_perm:
-			pass
+	FTPdownload(savePathPrimary, con)
  
 	con.cwd('/FbaSha') 
-	filenames = con.nlst()
+	FTPdownload(savePathChecksum, con)
 
-	for item in filenames:
-		host_file = os.path.join(savePathChecksum, item)
-		try:
-			with open(host_file, 'wb') as local_file:
-				con.retrbinary('RETR ' + item, local_file.write)
-		except ftplib.error_perm:
-			pass
-	con.quit()
+	total_size  = getDirectorySize(savePathPrimary)
+	print("Directory size: " + str(total_size) + " bytes")
 
-	file_list = os.listdir(savePathPrimary)
-	full_list = [os.path.join(savePathPrimary, i) for i in file_list]
-	time_sorted_list = sorted(full_list, key = os.path.basename)
-	print("Files sorted and recieved successfully")
+	while (total_size > 1048576):
+		sorted_filelist  = getSortedFileList(savePathPrimary)
+		os.remove(sorted_filelist[1])
+		print("File " +  str(sorted_filelist[1]) +  "deleted")
+		total_size  = getDirectorySize(savePathPrimary)
+		print("Directory size: " + str(total_size) + " bytes")
 
 	looptime = time.time() - looptime
-	print(looptime) 
+	print("Time for this loop: " + str(looptime) + " seconds") 
 	time.sleep(60-looptime)
+
+
+
 
