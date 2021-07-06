@@ -39,9 +39,9 @@ def brokenFilesRecovery(pathFile, pathCheckSum):
             fRead = f.read()
             sha256Download.append(fRead)
 
-    for i in range(0, len(sha256Make)-1):
+    for i in range(0, len(sha256Make)):
     	flag = False
-    	for j in range(0, len(sha256Make)-1):
+    	for j in range(0, len(sha256Make)):
     		if(sha256Make[i] == sha256Download[j]):
     			flag = True
     	if (flag):
@@ -49,3 +49,5 @@ def brokenFilesRecovery(pathFile, pathCheckSum):
     	else:
             print("Does not match. Download " + sha256Make[i])
             fileDownload(os.listdir(pathFile)[i], pathFile)
+
+

@@ -24,6 +24,6 @@ def fileRotation(savePathPrimary, savePathChecksum):
 		sorted_sumlist = getSortedFileList(savePathChecksum)
 		os.remove(sorted_filelist[0])
 		os.remove(sorted_sumlist[0])
-		print("File " +  str(sorted_filelist[0]) +  "deleted")
+		print("File " +  str(sorted_filelist[0]) +  " deleted")
 		total_size  = getDirectorySize(savePathPrimary)
 		print("Directory size: " + str(total_size) + " bytes")
