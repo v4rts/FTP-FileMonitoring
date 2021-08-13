@@ -6,8 +6,8 @@ from download import *
 from rotation import *
 from diagnostic import *
 
-host = 'v4rts.beget.tech'
-user = 'v4rts_test'
+host = 'v4rts2.beget.tech'
+user = 'v4rts2_test'
 password = '1234Bb!'
 savePathPrimary = '/Users/macuser/desktop/FTP-FileMonitoring/primaryfiles'
 savePathChecksum = '/Users/macuser/desktop/FTP-FileMonitoring/checksumFiles'
